@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useContext } from "react";
 
 import Player from "./components/Player";
@@ -17,6 +18,7 @@ import PlayListDetails from "./components/PlayListDetails";
 import { usePlayerContext } from "./context/PlayerProvider";
 import Dashboard from "./Admin/Dashboard";
 import AlbumEdit from "./Admin/AlbumEdit";
+import SongEdit from "./Admin/SongEdit";
 
 const App = () => {
 
@@ -25,7 +27,7 @@ const App = () => {
   const location = useLocation(); // Get the current route
 
   // Check if the current route is "/dashboard"
-  const isSpecialRoute = location.pathname === "/dashboard" || location.pathname.startsWith("/editAlbum/");
+  const isSpecialRoute = location.pathname === "/dashboard" || location.pathname.startsWith("/editAlbum/") || location.pathname.startsWith("/editSong/");
   return (
     <div className="h-screen bg-black">
     <div className={`h-[90%] flex ${isSpecialRoute ? "justify-center" : ""}`}>
@@ -47,6 +49,7 @@ const App = () => {
         <Route path="/album/:id" element={<DisplayAlbum />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/editAlbum/:id" element={<AlbumEdit />} />
+        <Route path="/editSong/:id" element={<SongEdit />} />
       </Routes>
 
       <Toaster />

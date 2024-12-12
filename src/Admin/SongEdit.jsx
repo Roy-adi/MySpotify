@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import AdminStats from "./AdminStats";
@@ -15,86 +16,89 @@ import {
   FormGroup,
 } from "@mui/material";
 
-const AlbumEdit = () => {
+const SongEdit = () => {
   const { id } = useParams();
-  const { getAlbumDetails, albumDetails, getplayList, playLists,editAlbum } =
+  const { getSongDetails, songDetails, editsong, getplayList, playLists } =
     useApiCallContext();
 
   const [formData, setFormData] = useState({
-    albumName: "",
-    albumDescription: "",
-    albumColor: "",
-    albumImg: "",
-    songs: [],
+    songName: "",
+    description: "",
+    singerName: "",
+    image: "",
+    audio: "",
+    duration: "",
   });
-  const [selectedSongs, setSelectedSongs] = useState([]);
 
   useEffect(() => {
     if (id) {
-      getAlbumDetails(id);
+      getSongDetails(id);
     }
     getplayList();
   }, [id]);
 
   useEffect(() => {
-    if (albumDetails) {
+    if (songDetails) {
       setFormData({
-        albumName: albumDetails.albumName || "",
-        albumDescription: albumDetails.albumDescription || "",
-        albumColor: albumDetails.albumColor || "",
-        albumImg: albumDetails.albumImg || "",
-        songs: albumDetails.songs || [],
+        songName: songDetails.songName || "",
+        description: songDetails.description || "",
+        singerName: songDetails.singerName || "",
+        image: songDetails.image || "",
+        audio: songDetails.audio || "",
+        duration: songDetails.duration || "",
       });
-      setSelectedSongs(albumDetails.songs.map((song) => song._id));
     }
-  }, [albumDetails]);
+  }, [songDetails]);
 
   const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+   const { name, value, files, type } = e.target;
+ 
+   setFormData({
+     ...formData,
+     [name]: type === "file" ? files[0] : value, // Handle file input or normal text input
+   });
+ };
+ 
 
-console.log(selectedSongs,'selectedSongs')
 
-const handleImageUpload = (file) => {
-  if (file) {
-    // Validate file type (optional)
-    const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-    if (!allowedTypes.includes(file.type)) {
-      alert("Please upload a valid image file (JPEG/PNG).");
-      return;
+
+  const handleImageUpload = (file) => {
+    if (file) {
+      // Validate file type (optional)
+      const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+      if (!allowedTypes.includes(file.type)) {
+        alert("Please upload a valid image file (JPEG/PNG).");
+        return;
+      }
+
+      // Update the formData state with the selected file
+      setFormData((prevState) => ({
+        ...prevState,
+        image: file,
+      }));
     }
-
-    // Update the formData state with the selected file
-    setFormData((prevState) => ({
-      ...prevState,
-      albumImg: file,
-    }));
-  }
-};
+  };
 
   const handleEdit = () => {
-
     const dataToSend = new FormData();
-    dataToSend.append("albumName", formData.albumName);
-    dataToSend.append("albumDescription", formData.albumDescription);
-    dataToSend.append("albumColor", formData.albumColor);
-    dataToSend.append("albumImg", formData.albumImg);
-     const addSongs = selectedSongs.join(",");
-  dataToSend.append("addSongs", addSongs);
-    editAlbum(id, dataToSend); 
+    dataToSend.append("songName", formData.songName);
+    dataToSend.append("description", formData.description);
+    dataToSend.append("duration", formData.duration);
+    dataToSend.append("image", formData.image);
+    dataToSend.append("audio", formData.audio);
+    dataToSend.append("singerName", formData.singerName);
+
+    editsong(id,dataToSend)
   };
 
-  console.log(albumDetails, "albumDetails");
+  console.log(songDetails, "songDetails");
 
   return (
     <>
       <div className="w-full min-h-screen bg-gray-900 text-white">
         <AdminStats />
         <div className=" bg-gray-800 p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-4">Edit Album</h2>
+          <h2 className="text-2xl font-bold mb-4">Edit Song</h2>
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
@@ -105,13 +109,13 @@ const handleImageUpload = (file) => {
                     marginBottom: "8px",
                   }}
                 >
-                  Album Name
+                  Song Name
                 </InputLabel>
                 <TextField
                   fullWidth
                   variant="outlined"
-                  name="albumName"
-                  value={formData.albumName}
+                  name="songName"
+                  value={formData.songName}
                   onChange={handleInputChange}
                   className="bg-white rounded"
                 />
@@ -124,13 +128,13 @@ const handleImageUpload = (file) => {
                     marginBottom: "8px",
                   }}
                 >
-                  Album Description
+                  Song Description
                 </InputLabel>
                 <TextField
                   fullWidth
                   variant="outlined"
-                  name="albumDescription"
-                  value={formData.albumDescription}
+                  name="description"
+                  value={formData.description}
                   onChange={handleInputChange}
                   className="bg-white text-black rounded"
                 />
@@ -143,12 +147,12 @@ const handleImageUpload = (file) => {
                     marginBottom: "8px",
                   }}
                 >
-                  Album Color
+                  Duration (in seconds)
                 </InputLabel>
                 <input
-                  type="color"
-                  name="albumColor"
-                  value={formData.albumColor}
+                  type="number"
+                  name="duration"
+                  value={formData.duration}
                   onChange={handleInputChange}
                   className="w-full h-10 p-1 rounded border border-gray-300 mt-3"
                   style={{ background: "white" }}
@@ -165,7 +169,7 @@ const handleImageUpload = (file) => {
                     marginBottom: "8px",
                   }}
                 >
-                  Album Image
+                  Song Image
                 </InputLabel>
                 <input
                   type="file"
@@ -176,45 +180,48 @@ const handleImageUpload = (file) => {
                            file:rounded file:border-0
                            file:text-sm file:font-semibold
                            file:bg-blue-500 file:text-white
-                           hover:file:bg-blue-700 bg-white mt-8"
+                           hover:file:bg-blue-700 bg-white mt-6"
                 />
               </div>
-              <div className="md:col-span-2">
-                <FormGroup>
+              <div className="">
+                <div>
                   <InputLabel
-                    htmlFor="songs"
                     style={{
                       color: "white",
                       fontSize: "16px",
                       marginBottom: "8px",
                     }}
                   >
-                    Add Songs
+                    Audio
                   </InputLabel>
-                  <Autocomplete
-                    multiple
-                    options={playLists || []}
-                    getOptionLabel={(option) => option?.songName || ""}
-                    value={selectedSongs.map(
-                      (songId) =>
-                        playLists.find((song) => song._id === songId) || null
-                    )}
-                    onChange={(event, newValue) => {
-                      const selectedIds = newValue.map((song) => song._id);
-                      setSelectedSongs(selectedIds);
-                    }}
-                    disableCloseOnSelect
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        placeholder="Add Songs"
-                        className="bg-white text-black rounded"
-                      />
-                    )}
-                    sx={{ mt: 2 }}
+                  <input
+                    type="file" // Set input type to 'file'
+                    name="audio"
+                    accept="audio/*" // Accept only audio files (e.g., mp3, wav, etc.)
+                    onChange={handleInputChange}
+                    className="w-full h-10 p-1 rounded border border-gray-300 mt-3"
+                    style={{ background: "white" }}
                   />
-                </FormGroup>
+                </div>
+              </div>
+              <div>
+                <InputLabel
+                  style={{
+                    color: "white",
+                    fontSize: "16px",
+                    marginBottom: "8px",
+                  }}
+                >
+                  Artist
+                </InputLabel>
+                <input
+                  type="text"
+                  name="singerName"
+                  value={formData.singerName}
+                  onChange={handleInputChange}
+                  className="w-full h-10 p-1 rounded border border-gray-300 mt-3"
+                  style={{ background: "white" }}
+                />
               </div>
             </div>
 
@@ -233,4 +240,4 @@ const handleImageUpload = (file) => {
   );
 };
 
-export default AlbumEdit;
+export default SongEdit;

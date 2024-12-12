@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
@@ -19,6 +20,8 @@ export const ApiCallProvider = ({ children }) => {
   const [userLists, setUserLists] = useState([]);
   const [albumLists, setAlbumLists] = useState([]);
   const [albumDetails, setAlbumDetails] = useState();
+  const [songDetails, setSongDetails] = useState();
+  const [dashboardCount, setDashboardCount] = useState();
 
   const authUsers = async () => {
     try {
@@ -340,7 +343,79 @@ export const ApiCallProvider = ({ children }) => {
         }
       );
 
-      setAlbumDetails(response.data.data);
+      setAlbumDetails(response.data);
+    } catch (error) {
+      // Handle the error
+      console.error(
+        "details failed:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
+  const editAlbum = async (albumId, dataToSend) => {
+    try {
+      const response = await axios.put(
+        `${base_url}/editAlbum/${albumId}`,
+        dataToSend,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Successfully updated Album");
+      }
+    } catch (error) {
+      // Handle the error
+      console.error(
+        "details failed:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
+
+  const getSongDetails = async (songId) => {
+    try {
+
+      const response = await axios.get(
+        `${base_url}/songDetails/${songId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setSongDetails(response.data);
+      }
+    } catch (error) {
+      // Handle the error
+      console.error(
+        "details failed:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
+  const editsong = async (songId, dataToSend) => {
+    try {
+      const response = await axios.put(
+        `${base_url}/editSong/${songId}`,
+        dataToSend,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Successfully updated Album");
+      }
     } catch (error) {
       // Handle the error
       console.error(
@@ -351,11 +426,134 @@ export const ApiCallProvider = ({ children }) => {
   };
 
   
+  const addAlbum = async (dataToSend) => {
+    try {
+      const response = await axios.post(
+        `${base_url}/addalbum`,
+        dataToSend,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        toast.success("Successfully updated Album");
+      }
+    } catch (error) {
+      // Handle the error
+      console.error(
+        "details failed:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
+
+  const addSong = async (dataToSend) => {
+    try {
+      const response = await axios.post(
+        `${base_url}/addSong`,
+        dataToSend,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        toast.success("Successfully updated Album");
+      }
+    } catch (error) {
+      // Handle the error
+      console.error(
+        "details failed:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
+
+  const deleteSong = async (id) => {
+    try {
+      const response = await axios.delete(
+        `${base_url}/deleteSong/${id}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Successfully delete song");
+        getplayList()
+      }
+    } catch (error) {
+      // Handle the error
+      console.error(
+        "details failed:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
+  const deleteAlbum = async (id) => {
+    try {
+      const response = await axios.delete(
+        `${base_url}/deleteAlbum/${id}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Successfully delete Album");
+        getAlbumList()
+      }
+    } catch (error) {
+      // Handle the error   
+      console.error(
+        "details failed:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
+
+  const getDashboardCount = async () => {
+    try {
+
+      const response = await axios.get(
+        `${base_url}/dashboard/Count`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      if(response.status === 200){
+        setDashboardCount(response.data);
+      }
+    } catch (error) {
+      // Handle the error
+      console.error(
+        "details failed:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
+
 
 
   const values = {
     authUsers,
-    SignUpUser,userDetailsCall,loginUser,userData,CreatePlayList,playList, playListData,getplayListdetails, playListDetails,getplayList,playLists,addSongToPlayList,removeSongToPlayList,getUserList,userLists,getAlbumList,albumLists,getAlbumDetails,albumDetails
+    SignUpUser,userDetailsCall,loginUser,userData,CreatePlayList,playList, playListData,getplayListdetails, playListDetails,getplayList,playLists,addSongToPlayList,removeSongToPlayList,getUserList,userLists,getAlbumList,albumLists,getAlbumDetails,albumDetails,editAlbum,getSongDetails,songDetails,editsong,addAlbum,addSong,deleteSong,deleteAlbum,getDashboardCount,dashboardCount
   };
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;
 };

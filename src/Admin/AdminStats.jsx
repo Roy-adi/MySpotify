@@ -1,10 +1,21 @@
-import React from "react";
+/* eslint-disable no-unused-vars */
+import React, { useEffect } from "react";
 import { LuDiscAlbum } from "react-icons/lu";
 import { GiMusicalNotes } from "react-icons/gi";
 import { FaUsers } from "react-icons/fa";
 import spotify_logo from "../assets/spotify_logo.png";
 import { IoMusicalNotes } from "react-icons/io5";
+import { useApiCallContext } from "../context/ApiCallProvider";
 const AdminStats = () => {
+ 
+  const {getDashboardCount,dashboardCount} =  useApiCallContext()
+
+  useEffect(() => {
+    getDashboardCount()
+  }, [])
+
+  console.log(dashboardCount , 'dashboard count')
+
   return (
     <>
       <header className="p-6">
@@ -22,7 +33,7 @@ const AdminStats = () => {
             <IoMusicalNotes className="text-green-500 text-4xl relative" />
           </div>
           <div>
-            <div className="text-3xl font-bold">14</div>
+            <div className="text-3xl font-bold"> {dashboardCount?.totalSongs} </div>
             <p className="text-gray-400 mt-1">Total Songs</p>
           </div>
         </div>
@@ -33,7 +44,7 @@ const AdminStats = () => {
             <LuDiscAlbum className="text-blue-500 text-4xl relative" />
           </div>
           <div>
-            <div className="text-3xl font-bold">4</div>
+            <div className="text-3xl font-bold">{dashboardCount?.totalAlbums} </div>
             <p className="text-gray-400 mt-1">Total Albums</p>
           </div>
         </div>
@@ -44,7 +55,7 @@ const AdminStats = () => {
             <GiMusicalNotes className="text-purple-500 text-4xl relative" />
           </div>
           <div>
-            <div className="text-3xl font-bold">15</div>
+            <div className="text-3xl font-bold">{dashboardCount?.totalSingers} </div>
             <p className="text-gray-400 mt-1">Total Artists</p>
           </div>
         </div>
@@ -55,7 +66,7 @@ const AdminStats = () => {
             <FaUsers className="text-yellow-500 text-4xl relative" />
           </div>
           <div>
-            <div className="text-3xl font-bold">3</div>
+            <div className="text-3xl font-bold">{dashboardCount?.totalUser} </div>
             <p className="text-gray-400 mt-1">Total Users</p>
           </div>
         </div>
