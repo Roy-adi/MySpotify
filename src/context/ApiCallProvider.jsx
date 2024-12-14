@@ -4,12 +4,14 @@ import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 const AppContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 
 export const ApiCallProvider = ({ children }) => {
   const base_url = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate()
   const token = localStorage.getItem("accessToken");
   const { isSignedIn, user, isLoaded } = useUser();
   const [userData, setUserData] = useState({});
@@ -415,6 +417,7 @@ export const ApiCallProvider = ({ children }) => {
 
       if (response.status === 200) {
         toast.success("Successfully updated Album");
+        navigate('/dashboard')
       }
     } catch (error) {
       // Handle the error
