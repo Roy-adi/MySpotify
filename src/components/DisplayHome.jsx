@@ -66,7 +66,7 @@ const DisplayHome = () => {
       <div className="w-[100%] m-2 px-6 pt-4 rounded bg-[#121212] text-white overflow-auto lg:w-[75%] lg:ml-0">
         <Navbar />
         <div className="mb-4">
-          <h1 className="my-5 font-bold text-2xl">Featured Charts</h1>
+          <h1 className="my-5 font-bold text-2xl">Featured Albums</h1>
           <div
             className="relative group"
             onWheel={(e) => handleMouseWheel(e, albumSliderRef)}

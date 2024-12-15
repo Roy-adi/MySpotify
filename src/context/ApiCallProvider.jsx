@@ -369,6 +369,7 @@ export const ApiCallProvider = ({ children }) => {
 
       if (response.status === 200) {
         toast.success("Successfully updated Album");
+        navigate('/dashboard')
       }
     } catch (error) {
       // Handle the error

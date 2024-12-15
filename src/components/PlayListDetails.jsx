@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import { albumsData, assets, songsData } from "../assets/assets";

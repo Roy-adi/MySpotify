@@ -81,7 +81,7 @@ const handleImageUpload = (file) => {
     dataToSend.append("albumName", formData.albumName);
     dataToSend.append("albumDescription", formData.albumDescription);
     dataToSend.append("albumColor", formData.albumColor);
-    dataToSend.append("albumImg", formData.albumImg);
+    dataToSend.append("image", formData.albumImg);
      const addSongs = selectedSongs.join(",");
   dataToSend.append("addSongs", addSongs);
     editAlbum(id, dataToSend); 

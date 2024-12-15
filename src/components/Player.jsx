@@ -60,7 +60,7 @@ const Player = () => {
   };
 
   return (
-    <div className="h-[10%] bg-black flex justify-between items-center text-white px-6 py-3 shadow-lg">
+    <div className="h-[10%] bg-black flex justify-between items-center text-white px-6 py-3 shadow-lg z-50">
       {/* Current Track Info */}
       <div className="hidden lg:flex items-center gap-4">
         <img
@@ -79,7 +79,7 @@ const Player = () => {
       </div>
 
       {/* Controls */}
-      <div className="flex flex-col items-center gap-2 w-full lg:w-1/2">
+      <div className="flex flex-col items-center gap-2 w-full lg:w-1/2 z-50">
         <div className="flex items-center gap-6">
           <FaStepBackward
             onClick={previous}
@@ -102,7 +102,7 @@ const Player = () => {
           />
         </div>
         {/* Progress Bar */}
-        <div className="flex items-center gap-2 w-full">
+        <div className="flex items-center gap-2 w-full z-50">
           <span className="text-sm text-gray-400">{formatTime(currentTime)}</span>
           <input
             type="range"
