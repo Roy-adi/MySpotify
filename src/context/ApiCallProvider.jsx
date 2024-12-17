@@ -553,11 +553,37 @@ export const ApiCallProvider = ({ children }) => {
   };
 
 
+  const editPlaylist = async (playlistId, dataToSend) => {
+    try {
+      const response = await axios.put(
+        `${base_url}/editplaylists/${playlistId}`,
+        dataToSend,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Successfully updated paylist");
+        getplayListdetails(playlistId)
+      }
+    } catch (error) {
+      // Handle the error
+      console.error(
+        "details failed:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
+
 
 
   const values = {
     authUsers,
-    SignUpUser,userDetailsCall,loginUser,userData,CreatePlayList,playList, playListData,getplayListdetails, playListDetails,getplayList,playLists,addSongToPlayList,removeSongToPlayList,getUserList,userLists,getAlbumList,albumLists,getAlbumDetails,albumDetails,editAlbum,getSongDetails,songDetails,editsong,addAlbum,addSong,deleteSong,deleteAlbum,getDashboardCount,dashboardCount
+    SignUpUser,userDetailsCall,loginUser,userData,CreatePlayList,playList, playListData,getplayListdetails, playListDetails,getplayList,playLists,addSongToPlayList,removeSongToPlayList,getUserList,userLists,getAlbumList,albumLists,getAlbumDetails,albumDetails,editAlbum,getSongDetails,songDetails,editsong,addAlbum,addSong,deleteSong,deleteAlbum,getDashboardCount,dashboardCount,editPlaylist
   };
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;
 };

@@ -30,13 +30,19 @@ const PlayListDetails = () => {
     addSongToPlayList,
     removeSongToPlayList,
     getUserList,
-    userLists,
+    userLists,editPlaylist
   } = useApiCallContext();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [previewImg, setPreviewImg] = useState(null);
+  const [formData, setFormData] = useState({
+    playlistName: "", // Initialize with an empty string
+    playlistImg: null, // Initialize as null
+  });
 
-  console.log(userLists,'userLists')
+  
 
   const handleSearch = (query) => {
     const dataToSend = {
@@ -83,6 +89,36 @@ const PlayListDetails = () => {
     removeSongToPlayList(dataToSend);
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value, // Dynamically update the state based on input name
+    }));
+  };
+
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]; // Get the selected file
+    if (file) {
+      setFormData((prevData) => ({
+        ...prevData,
+        playlistImg: file, // Update state with file object
+      }));
+      setPreviewImg(URL.createObjectURL(file)); // Generate and set preview URL
+    }
+  };
+
+  const handleCreatePlaylist = () => {
+    const payload = new FormData(); // Use a different name to avoid overwriting
+    payload.append("playlistName", formData.playlistName); // Use state values
+    payload.append("image", formData.playlistImg); // Use state values
+
+    editPlaylist(id, payload); // Pass the correct payload
+    setIsModalOpen(false); // Close modal after saving
+  };
+
+
   return (
     <div className="mt-5 w-full">
       <Navbar />
@@ -92,10 +128,11 @@ const PlayListDetails = () => {
             className="w-48 rounded"
             src={playListDetails.playlistImg}
             alt=""
+            onClick={() => setIsModalOpen(true)}
           />
           <div className="flex flex-col">
             <p>Playlist</p>
-            <h2 className="text-5xl font-bold mb-4 md:text-7xl">
+            <h2 className="text-5xl font-bold mb-4 md:text-7xl" onClick={() => setIsModalOpen(true)}>
               {playListDetails.playlistName}{" "}
             </h2>
             <h4>{albumData?.desc}</h4>
@@ -281,6 +318,75 @@ const PlayListDetails = () => {
               >
                 Close
               </button>
+            </div>
+          </div>
+        )}
+
+        {isModalOpen && (
+          <div
+            className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center transition-opacity "
+            onClick={() => setIsModalOpen(false)} // Close modal on background click
+          >
+            <div
+              className="bg-[#1e1e1e] w-full max-w-md p-6 rounded-lg shadow-xl transition-transform transform scale-95 sm:scale-100"
+              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
+            >
+              <h2 className="text-2xl font-bold mb-4 text-white">
+                Create Playlist
+              </h2>
+              <div className="flex flex-col gap-4">
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">
+                    Playlist Name
+                  </label>
+                  <input
+                    type="text"
+                    name="playlistName"
+                    value={formData.playlistName}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 rounded text-white  focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Enter playlist name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-400 mb-2">
+                    Playlist Image
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="playlistImg" // Name matches the key in formData
+                    onChange={handleFileChange} // Updates the file in state
+                    className="w-full px-3 py-2 rounded text-white  focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                  {previewImg && (
+                    <div className="mt-4 flex justify-center items-center">
+                      <div>
+                        <p className="text-sm text-gray-400 mb-2 text-center">
+                          Preview:
+                        </p>
+                        <img
+                          src={previewImg}
+                          alt="Playlist Preview"
+                          className="rounded-full w-36 h-36"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <button
+                  className="w-full px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition"
+                  onClick={handleCreatePlaylist}
+                >
+                  Save Playlist
+                </button>
+                <button
+                  className="w-full px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         )}
