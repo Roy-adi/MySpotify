@@ -16,6 +16,9 @@ import { useApiCallContext } from "../context/ApiCallProvider";
 import { FaPlay, FaPlus, FaRegTrashCan } from "react-icons/fa6";
 import { usePlayerContext } from "../context/PlayerProvider";
 
+
+
+
 const PlayListDetails = () => {
   const { id } = useParams();
   const albumData = albumsData[id];
@@ -30,7 +33,7 @@ const PlayListDetails = () => {
     addSongToPlayList,
     removeSongToPlayList,
     getUserList,
-    userLists,editPlaylist
+    userLists,editPlaylist,sendReq
   } = useApiCallContext();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -63,7 +66,11 @@ const PlayListDetails = () => {
   }, [id, searchTerm]);
 
   const handleAddCollaborator = (user) => {
-    // Logic to add a collaborator for the playlist
+    const dataToSend ={
+      playlistId: playListDetails._id,
+      collaboratorId: user._id,
+    }
+    sendReq(dataToSend)
     console.log("Add Collaborator:", user);
   };
 
@@ -125,14 +132,14 @@ const PlayListDetails = () => {
       <div className="overflow-y-auto max-h-[550px] ">
         <div className="mt-10 flex gap-8 flex-col md:flex-row md:items-end text-white">
           <img
-            className="w-48 rounded"
+            className="w-48 rounded cursor-pointer"
             src={playListDetails.playlistImg}
             alt=""
             onClick={() => setIsModalOpen(true)}
           />
           <div className="flex flex-col">
             <p>Playlist</p>
-            <h2 className="text-5xl font-bold mb-4 md:text-7xl" onClick={() => setIsModalOpen(true)}>
+            <h2 className="text-5xl font-bold mb-4 md:text-7xl cursor-pointer" onClick={() => setIsModalOpen(true)}>
               {playListDetails.playlistName}{" "}
             </h2>
             <h4>{albumData?.desc}</h4>
@@ -261,7 +268,7 @@ const PlayListDetails = () => {
                       {/* Playlist Details */}
                       <div className="p-4">
                         <h3 className="text-lg font-semibold truncate">
-                          {playlist.title}
+                          {playlist.songName}
                         </h3>
                         <p className="text-sm text-gray-400 truncate">
                           By {playlist.singerName}

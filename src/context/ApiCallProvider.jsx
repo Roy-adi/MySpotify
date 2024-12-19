@@ -24,6 +24,7 @@ export const ApiCallProvider = ({ children }) => {
   const [albumDetails, setAlbumDetails] = useState();
   const [songDetails, setSongDetails] = useState();
   const [dashboardCount, setDashboardCount] = useState();
+  const [collaborationList, setCollaborationList] = useState();
 
   const authUsers = async () => {
     try {
@@ -231,7 +232,7 @@ export const ApiCallProvider = ({ children }) => {
 
   const addSongToPlayList = async (dataToSend) => {
     try {
-
+     const {playlistId} = dataToSend
       const response = await axios.post(
         `${base_url}/addSongToPlaylist`,
         { ...dataToSend },
@@ -245,6 +246,7 @@ export const ApiCallProvider = ({ children }) => {
       // Check if the response status is 200
       if (response.status === 200) {
         toast.success("Successfully Song Added");
+        getplayListdetails(playlistId)
       } else {
         toast.error("Failed to add song to the playlist");
       }
@@ -260,7 +262,7 @@ export const ApiCallProvider = ({ children }) => {
 
   const removeSongToPlayList = async (dataToSend) => {
     try {
-
+      const {playlistId} = dataToSend
       const response = await axios.post(
         `${base_url}/playlist/remove-song`,
         { ...dataToSend },
@@ -274,6 +276,7 @@ export const ApiCallProvider = ({ children }) => {
       // Check if the response status is 200
       if (response.status === 200) {
         toast.success("Successfully Song remove");
+        getplayListdetails(playlistId)
       } else {
         toast.error("Failed to remove song to the playlist");
       }
@@ -579,11 +582,85 @@ export const ApiCallProvider = ({ children }) => {
   };
 
 
+  const sendReq = async (dataToSend) => {
+    try {
+      const response = await axios.post(
+        `${base_url}/sendReqToCollaborator`,
+        dataToSend,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        toast.success("Successfully updated Album");
+      }
+    } catch (error) {
+      // Handle the error
+      console.error(
+        "details failed:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
+
+  const getCollaborationList = async () => {
+    try {
+
+      const response = await axios.get(
+        `${base_url}/Collaboration/list`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      if(response.status === 200){
+        setCollaborationList(response.data);
+      }
+    } catch (error) {
+      // Handle the error
+      console.error(
+        "details failed:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
+
+  const CollaborationReq = async (dataToSend) => {
+    try {
+      const response = await axios.post(
+        `${base_url}/Collaboration/response`,
+        {...dataToSend},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Playlist has been successfully accepted");
+        getCollaborationList()
+      }
+    } catch (error) {
+      // Handle the error
+      console.error(
+        "details failed:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+
 
 
   const values = {
     authUsers,
-    SignUpUser,userDetailsCall,loginUser,userData,CreatePlayList,playList, playListData,getplayListdetails, playListDetails,getplayList,playLists,addSongToPlayList,removeSongToPlayList,getUserList,userLists,getAlbumList,albumLists,getAlbumDetails,albumDetails,editAlbum,getSongDetails,songDetails,editsong,addAlbum,addSong,deleteSong,deleteAlbum,getDashboardCount,dashboardCount,editPlaylist
+    SignUpUser,userDetailsCall,loginUser,userData,CreatePlayList,playList, playListData,getplayListdetails, playListDetails,getplayList,playLists,addSongToPlayList,removeSongToPlayList,getUserList,userLists,getAlbumList,albumLists,getAlbumDetails,albumDetails,editAlbum,getSongDetails,songDetails,editsong,addAlbum,addSong,deleteSong,deleteAlbum,getDashboardCount,dashboardCount,editPlaylist,sendReq,getCollaborationList,collaborationList,CollaborationReq
   };
   return <AppContext.Provider value={values}>{children}</AppContext.Provider>;
 };
