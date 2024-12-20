@@ -171,7 +171,7 @@ export const ApiCallProvider = ({ children }) => {
         }
       );
 
-      setplayListData(response.data.playlists);
+      setplayListData(response.data.playlistData);
     } catch (error) {
       // Handle the error
       console.error(

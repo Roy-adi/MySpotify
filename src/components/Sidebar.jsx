@@ -18,6 +18,14 @@ const Sidebar = () => {
 
   const { CreatePlayList, playList, playListData } = useApiCallContext();
 
+  console.log(playListData , 'Play List')
+
+  const combinedPlaylists = [
+    ...(playListData.collaborationPlaylist || []),
+    ...(playListData.ownedPlaylists || []),
+  ];
+
+
   const handlePlayListButtonClick = () => {
     setShowPlayList((prev) => !prev);
     if (!showPlayList) {
@@ -90,38 +98,36 @@ const Sidebar = () => {
           </div>
         </div>
 
-        {showPlayList && playListData?.length > 0 && (
-          <div className="p-4">
-            {playListData.map((playlist) => (
-              <div
-                key={playlist._id}
-                className="bg-[#242424] flex items-center p-4 rounded mb-3 hover:bg-[#333333] transition duration-200 cursor-pointer"
-              >
-                <img
-                  src={playlist.playlistImg || assets.playlistImg}
-                  alt={playlist.playlistImg}
-                  className="w-12 h-12 rounded"
-                />
-                <Link to={`/playlist/${playlist._id}`}>
-                <div className="ml-4">
-                  <p className="text-white font-semibold">{playlist.playlistName}</p>
-                  <p className="text-gray-400 text-sm">
-                    Created on:{" "}
-                    {new Date(playlist.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-                </Link>
+
+        <div className="p-4">
+        {combinedPlaylists.map((playlist) => (
+          <div
+            key={playlist._id}
+            className="bg-[#242424] flex items-center p-4 rounded mb-3 hover:bg-[#333333] transition duration-200 cursor-pointer"
+          >
+            <img
+              src={playlist.playlistImg || "/path-to-default-image.jpg"} // Fallback image if playlistImg is missing
+              alt={playlist.playlistName || "Playlist Image"}
+              className="w-12 h-12 rounded"
+            />
+            <Link to={`/playlist/${playlist._id}`}>
+              <div className="ml-4">
+                <p className="text-white font-semibold">
+                  {playlist.playlistName || "Untitled Playlist"}
+                </p>
+                <p className="text-gray-400 text-sm">
+                  Created on:{" "}
+                  {playlist.createdAt
+                    ? new Date(playlist.createdAt).toLocaleDateString()
+                    : "N/A"}
+                </p>
               </div>
-            ))}
+            </Link>
           </div>
-        )}
-  
-        {/* Placeholder when no playlists */}
-        {showPlayList && playListData?.length === 0 && (
-          <div className="p-4 text-gray-400 text-center">
-            <p>No playlists found. Create your first playlist!</p>
-          </div>
-        )}
+        ))}
+      </div>
+        
+
         <div className="p-4 bg-[#242424] m-2 rounded font-semibold flex flex-col items-start justify-start gap-1 pl-4">
           <h1>Create Your Own Paylist</h1>
           <p className="font-light">it's easy we will help you</p>
