@@ -52,7 +52,7 @@ useEffect(()=>{
   getCollaborationList()
 },[])
 
-console.log(collaborationList , 'collaboration list')
+
 
 const handleResponse = (notificationId, response) => {
   

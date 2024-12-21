@@ -14,15 +14,14 @@ import "slick-carousel/slick/slick-theme.css";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { usePlayerContext } from "../context/PlayerProvider";
 import { FaPlay } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 const DisplayHome = () => {
+  const navigate = useNavigate();
   const albumSliderRef = useRef(null);
   const songSliderRef = useRef(null);
   const { getAlbumList, albumLists, getplayList, playLists } =
     useApiCallContext();
   const { updateTrack, playWithId } = usePlayerContext();
-
-
-  
 
   useEffect(() => {
     getAlbumList();
@@ -83,13 +82,22 @@ const DisplayHome = () => {
               ref={(slider) => (albumSliderRef.current = slider)}
             >
               {albumLists.map((item, index) => (
-                <AlbumItem
+                <div
                   key={index}
-                  name={item.albumName}
-                  desc={item.albumDescription}
-                  id={item._id}
-                  image={item.albumImg}
-                />
+                  className="relative group min-w-[180px] h-[350px] p-2 px-3 rounded cursor-pointer hover:bg-[#ffffff26] transition-all duration-300 ease-in-out"
+                  onClick={() => navigate(`/album/${item._id}`)}
+                >
+                  {/* Item Content */}
+                  <img
+                    className="rounded h-[250px] w-full object-cover"
+                    src={item.albumImg}
+                    alt=""
+                  />
+                  <p className="font-bold mt-2 mb-1">{item.albumName}</p>
+                  <p className="text-slate-200 text-sm">
+                    {item.albumDescription.substring(0, 35) + "..."}
+                  </p>
+                </div>
               ))}
             </Slider>
             <button
@@ -123,7 +131,11 @@ const DisplayHome = () => {
                   className="relative group min-w-[180px] h-[350px] p-2 px-3 rounded cursor-pointer hover:bg-[#ffffff26] transition-all duration-300 ease-in-out"
                 >
                   {/* Item Content */}
-                  <img className="rounded h-[250px] w-full object-cover" src={item.image} alt="" />
+                  <img
+                    className="rounded h-[250px] w-full object-cover"
+                    src={item.image}
+                    alt=""
+                  />
                   <p className="font-bold mt-2 mb-1">{item.songName}</p>
                   <p className="text-slate-200 text-sm">
                     Artist: {item.singerName}

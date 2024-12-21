@@ -133,7 +133,7 @@ const Dashboard = () => {
     ];
 
     const payload = new FormData();
-    payload.append("albumName", formData.albumName);
+    payload.append("albumName", formData?.albumName);
     payload.append("albumDescription", formData.albumDescription);
     payload.append("image", formData.image);
     payload.append("albumColor", formData.albumColor);
@@ -252,7 +252,7 @@ const Dashboard = () => {
                       </td>
                       <td className="px-6 py-3">{song.songName}</td>
                       <td className="px-6 py-3">{song.singerName}</td>
-                      <td className="px-6 py-3">{song.album.albumName}</td>
+                      <td className="px-6 py-3">{song.album?.albumName}</td>
                       <td className="px-6 py-3 text-center flex justify-center space-x-4">
                         <button
                           className="p-2 rounded-full bg-red-500 hover:bg-red-400 text-white shadow-md hover:shadow-lg transition duration-300"
@@ -311,7 +311,7 @@ const Dashboard = () => {
                         index % 2 === 0 ? "bg-gray-800" : ""
                       } hover:bg-gray-600`}
                     >
-                      <td className="px-6 py-3">{album.albumName}</td>
+                      <td className="px-6 py-3">{album?.albumName}</td>
                       <td className="px-6 py-3">{album.albumColor}</td>
                       <td className="px-6 py-3">{album.createdAt}</td>
                       <td className="px-6 py-3 text-center flex justify-center space-x-4">
@@ -361,7 +361,7 @@ const Dashboard = () => {
                   <input
                     type="text"
                     name="albumName"
-                    value={formData.albumName}
+                    value={formData?.albumName}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 rounded text-white  focus:ring-2 focus:ring-blue-500 focus:outline-none"
                     placeholder="Enter Album Name"
@@ -538,7 +538,7 @@ const Dashboard = () => {
                     </option>
                     {albumLists.map((album) => (
                       <option key={album._id} value={album._id}>
-                        {album.albumName}
+                        {album?.albumName}
                       </option>
                     ))}
                   </select>

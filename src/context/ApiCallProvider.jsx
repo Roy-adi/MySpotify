@@ -195,7 +195,7 @@ export const ApiCallProvider = ({ children }) => {
         }
       );
 
-      setplayListDetails(response.data.playlist);
+      setplayListDetails(response.data);
     } catch (error) {
       // Handle the error
       console.error(
@@ -447,6 +447,7 @@ export const ApiCallProvider = ({ children }) => {
 
       if (response.status === 201) {
         toast.success("Successfully updated Album");
+        getAlbumList()
       }
     } catch (error) {
       // Handle the error
@@ -594,15 +595,21 @@ export const ApiCallProvider = ({ children }) => {
         }
       );
 
-      if (response.status === 201) {
-        toast.success("Successfully updated Album");
+      if (response.status === 200) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
       }
+      
     } catch (error) {
-      // Handle the error
-      console.error(
-        "details failed:",
-        error.response ? error.response.data : error.message
-      );
+      const errorMessage =
+      error.response && error.response.data && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+
+    toast.error(errorMessage); // Show the error message
+    console.error("Details failed:", errorMessage);
+   
     }
   };
 

@@ -70,36 +70,35 @@ const Sidebar = () => {
     navigate("/create-playlist");
   };
   return (
-    <div className="w-[25%] h-full p-2 flex-col gap-2 text-white hidden lg:flex">
-      <div className="bg-[#121212] h-[15%] rounded flex flex-col justify-around">
-        <div
-          onClick={() => navigate("/")}
-          className="flex items-center gap-3 pl-8 cursor-pointer"
-        >
-          <img className="w-6" src={assets.home_icon} alt="" />
-          <p className="font-b old">Home</p>
+    <div className="w-[25%] h-full p-2 flex flex-col gap-2 text-white hidden lg:flex">
+    <div className="bg-[#121212] h-[15%] rounded flex flex-col justify-around">
+      <div
+        onClick={() => navigate("/")}
+        className="flex items-center gap-3 pl-8 cursor-pointer"
+      >
+        <img className="w-6" src={assets.home_icon} alt="" />
+        <p className="font-bold">Home</p>
+      </div>
+      <div className="flex items-center gap-3 pl-8 cursor-pointer">
+        <img className="w-6" src={assets.search_icon} alt="" />
+        <p className="font-bold">Search</p>
+      </div>
+    </div>
+    <div className="bg-[#121212] h-[85%] rounded flex flex-col">
+      <div className="p-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <img className="w-8" src={assets.stack_icon} alt="stack_icon" />
+          <p className="font-semibold">Your Playlist</p>
         </div>
-        <div className="flex items-center gap-3 pl-8 cursor-pointer">
-          <img className="w-6" src={assets.search_icon} alt="" />
-          <p className="font-b old">Search</p>
+        <div className="flex items-center gap-3">
+          <button onClick={handlePlayListButtonClick}>
+            <img className="w-5" src={assets.plus_icon} alt="plus_icon" />
+          </button>
         </div>
       </div>
-      <div className="bg-[#121212] h-[85%] rounded">
-        <div className="p-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img className="w-8" src={assets.stack_icon} alt="stack_icon" />
-            <p className="font-semibold">Your PlayList</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <button   onClick={handlePlayListButtonClick}>
-              <img className="w-5" src={assets.plus_icon} alt="plus_icon" />
-            
-            </button>
-          </div>
-        </div>
-
-
-        <div className="p-4">
+   
+      {showPlayList && (
+        <div className="p-4 h-[50%] overflow-y-scroll">
         {combinedPlaylists.map((playlist) => (
           <div
             key={playlist._id}
@@ -126,99 +125,97 @@ const Sidebar = () => {
           </div>
         ))}
       </div>
-        
-
-        <div className="p-4 bg-[#242424] m-2 rounded font-semibold flex flex-col items-start justify-start gap-1 pl-4">
-          <h1>Create Your Own Paylist</h1>
-          <p className="font-light">it's easy we will help you</p>
-          <button
-            className="px-4 py-1.5 bg-white text-[15px] text-black rounded-full mt-4"
-            onClick={() => setIsModalOpen(true)}
-          >
-            Create Playlist
-          </button>
-        </div>
-        <div className="p-4 bg-[#242424] m-2 rounded font-semibold flex flex-col items-start justify-start gap-1 pl-4 mt-4">
-          <h1>Let's find some podcasts to follow</h1>
-          <p className="font-light">We'll keep you updated on new episodes</p>
-          <button className="px-4 py-1.5 bg-white text-[15px] text-black rounded-full mt-4">
-            Browse podcasts
-          </button>
-        </div>
-      </div>
-
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center transition-opacity "
-          onClick={() => setIsModalOpen(false)} // Close modal on background click
+       )}
+      
+  
+      <div className="p-4 bg-[#242424] m-2 rounded font-semibold flex flex-col items-start justify-start gap-1">
+        <h1>Create Your Own Playlist</h1>
+        <p className="font-light">It's easy, we will help you</p>
+        <button
+          className="px-4 py-1.5 bg-white text-[15px] text-black rounded-full mt-4"
+          onClick={() => setIsModalOpen(true)}
         >
-          <div
-            className="bg-[#1e1e1e] w-full max-w-md p-6 rounded-lg shadow-xl transition-transform transform scale-95 sm:scale-100"
-            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
-          >
-            <h2 className="text-2xl font-bold mb-4 text-white">
-              Create Playlist
-            </h2>
-            <div className="flex flex-col gap-4">
-              <div>
-                <label className="block text-sm text-gray-400 mb-2">
-                  Playlist Name
-                </label>
-                <input
-                  type="text"
-                  name="playlistName"
-                  value={formData.playlistName}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 rounded text-white  focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  placeholder="Enter playlist name"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-400 mb-2">
-                  Playlist Image
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  name="playlistImg" // Name matches the key in formData
-                  onChange={handleFileChange} // Updates the file in state
-                  className="w-full px-3 py-2 rounded text-white  focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
-                {previewImg && (
-                  <div className="mt-4 flex justify-center items-center">
-                    <div>
-                      <p className="text-sm text-gray-400 mb-2 text-center">
-                        Preview:
-                      </p>
-                      <img
-                        src={previewImg}
-                        alt="Playlist Preview"
-                        className="rounded-full w-36 h-36"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-              <button
-                className="w-full px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition"
-                onClick={handleCreatePlaylist}
-              >
-                Save Playlist
-              </button>
-              <button
-                className="w-full px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
-                onClick={() => setIsModalOpen(false)}
-              >
-                Cancel
-              </button>
+          Create Playlist
+        </button>
+      </div>
+  
+      <div className="p-4 bg-[#242424] m-2 rounded font-semibold flex flex-col items-start justify-start gap-1">
+        <h1>Let's find some podcasts to follow</h1>
+        <p className="font-light">We'll keep you updated on new episodes</p>
+        <button className="px-4 py-1.5 bg-white text-[15px] text-black rounded-full mt-4">
+          Browse podcasts
+        </button>
+      </div>
+    </div>
+  
+    {isModalOpen && (
+      <div
+        className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center"
+        onClick={() => setIsModalOpen(false)}
+      >
+        <div
+          className="bg-[#1e1e1e] w-full max-w-md p-6 rounded-lg shadow-xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h2 className="text-2xl font-bold mb-4 text-white">Create Playlist</h2>
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="block text-sm text-gray-400 mb-2">
+                Playlist Name
+              </label>
+              <input
+                type="text"
+                name="playlistName"
+                value={formData.playlistName}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 rounded text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="Enter playlist name"
+              />
             </div>
+            <div>
+              <label className="block text-sm text-gray-400 mb-2">
+                Playlist Image
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                name="playlistImg"
+                onChange={handleFileChange}
+                className="w-full px-3 py-2 rounded text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+              {previewImg && (
+                <div className="mt-4 flex justify-center items-center">
+                  <div>
+                    <p className="text-sm text-gray-400 mb-2 text-center">
+                      Preview:
+                    </p>
+                    <img
+                      src={previewImg}
+                      alt="Playlist Preview"
+                      className="rounded-full w-36 h-36"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+            <button
+              className="w-full px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition"
+              onClick={handleCreatePlaylist}
+            >
+              Save Playlist
+            </button>
+            <button
+              className="w-full px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
+              onClick={() => setIsModalOpen(false)}
+            >
+              Cancel
+            </button>
           </div>
         </div>
-      )}
-
-      
-
-    </div>
+      </div>
+    )}
+  </div>
+  
   );
 };
 
